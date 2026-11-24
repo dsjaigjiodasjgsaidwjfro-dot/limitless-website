@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Limitless AI Assistant</title>
+  <style>
+    body {
+      font-family: Georgia, serif;
+      background-color: #f6f3ec;
+      color: #2c2c2c;
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      width: 100%;
+      max-width: 720px;
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    h1 {
+      color: #1f3a2c;
+      margin: 0;
+    }
+    .chat-box {
+      height: 380px;
+      overflow-y: auto;
+      border: 1px solid #e2ddd3;
+      border-radius: 12px;
+      padding: 16px;
+      background: #faf8f4;
+      margin: 16px 0;
+      font-family: system-ui, sans-serif;
+    }
+    .message {
+      margin-bottom: 12px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      max-width: 85%;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .user {
+      background: #1f3a2c;
+      color: white;
+      margin-left: auto;
+    }
+    .bot {
+      background: #e9e4d8;
+      color: #222;
+    }
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+    input {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      font-size: 15px;
+    }
+    button {
+      background: #1f3a2c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+    }
+    .logout-btn {
+      background: #e9e4d8;
+      color: #1f3a2c;
+    }
+    .back-link {
+      display: inline-block;
+      margin-top: 14px;
+      color: #1f3a2c;
+      text-decoration: none;
+      font-family: system-ui, sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-bar">
+      <h1>Limitless AI Assistant</h1>
+      <button class="logout-btn" id="logoutBtn">Log Out</button>
+    </div>
+    <p>Find safe, reliable recipes tailored to your own dietary needs!</p>
+    <p id="userEmail" style="font-family: system-ui, sans-serif; font-size: 13px; color: #555;">Checking login...</p>
+
+    <div class="chat-box" id="chatBox">
+      <div class="message bot">Hi! Tell me your food allergies or dietary limitations, and I'll automatically search credible sources for safe recipes.</div>
+    </div>
+
+    <div class="input-row">
+      <input type="text" id="userInput" placeholder="e.g. Give me a gluten-free & dairy-free dinner..." />
+      <button id="sendBtn">Send</button>
+    </div>
+
+    <a class="back-link" href="index.html">← Back to Home</a>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyB_Tm1Mzsq2s74_6XR9ufqCLaZ85mvLZVE",
+      authDomain: "limitless-16ea6.firebaseapp.com",
+      projectId: "limitless-16ea6",
+      storageBucket: "limitless-16ea6.firebasestorage.app",
+      messagingSenderId: "492856532712",
+      appId: "1:492856532712:web:6aa2286c4fa6adf577335d",
+      measurementId: "G-TMDBLVNJNG"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Protect this page: send user to login.html if not signed in
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+      } else {
+        document.getElementById("userEmail").textContent = `Logged in as: ${user.email}`;
+      }
+    });
+
+    document.getElementById("logoutBtn").onclick = () => signOut(auth);
+
+    async function sendMessage() {
+      const input = document.getElementById("userInput");
+      const chatBox = document.getElementById("chatBox");
+      const userMessage = input.value.trim();
+      if (!userMessage) return;
+
+      chatBox.innerHTML += `<div class="message user">${userMessage}</div>`;
+      input.value = "";
+
+      const loading = document.createElement("div");
+      loading.className = "message bot";
+      loading.textContent = "Searching reliable sources...";
+      chatBox.appendChild(loading);
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      try {
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userMessage })
+        });
+        const data = await res.json();
+        loading.textContent = data.reply || data.error;
+      } catch (err) {
+        loading.textContent = "Connection error. Make sure the site is running on Vercel!";
+      }
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    document.getElementById("sendBtn").onclick = sendMessage;
+    document.getElementById("userInput").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") sendMessage();
+    });
+  </script>
+</body>
+</html>

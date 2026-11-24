@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Limitless — Login</title>
+  <style>
+    body {
+      font-family: Georgia, serif;
+      background: #f6f3ec;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: white;
+      padding: 32px;
+      border-radius: 16px;
+      width: 340px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    h1 { color: #1f3a2c; margin-top: 0; }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 25px;
+      background: #1f3a2c;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .secondary {
+      background: #e9e4d8;
+      color: #1f3a2c;
+    }
+    #status {
+      margin-top: 12px;
+      font-family: system-ui, sans-serif;
+      font-size: 14px;
+      color: #b00020;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Limitless</h1>
+    <p>Sign in with your email to use the AI Assistant.</p>
+
+    <input type="email" id="email" placeholder="Email address" />
+    <input type="password" id="password" placeholder="Password (min 6 chars)" />
+
+    <button id="loginBtn">Log In</button>
+    <button id="signupBtn" class="secondary">Create Account</button>
+    <p id="status"></p>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+    // PASTE YOUR FIREBASE CONFIG HERE (Firebase client keys are safe in HTML)
+    const firebaseConfig = {
+  apiKey: "AIzaSyB_Tm1Mzsq2s74_6XR9ufqCLaZ85mvLZVE",
+  authDomain: "limitless-16ea6.firebaseapp.com",
+  projectId: "limitless-16ea6",
+  storageBucket: "limitless-16ea6.firebasestorage.app",
+  messagingSenderId: "492856532712",
+  appId: "1:492856532712:web:6aa2286c4fa6adf577335d",
+  measurementId: "G-TMDBLVNJNG"
+};
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const status = document.getElementById("status");
+
+    // If already logged in, go straight to assistant.html
+    onAuthStateChanged(auth, (user) => {
+      if (user) window.location.href = "assistant.html";
+    });
+
+    document.getElementById("loginBtn").onclick = async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (err) {
+        status.textContent = err.message;
+      }
+    };
+
+    document.getElementById("signupBtn").onclick = async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+      } catch (err) {
+        status.textContent = err.message;
+      }
+    };
+  </script>
+</body>
+</html>

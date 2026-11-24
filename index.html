@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Limitless</title>
+
+    <!-- FONTS -->
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600;700&family=Bodoni+Moda:ital,opsz,wght@1,6..96,500;1,6..96,600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        /* GENERAL WEBSITE STYLE */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'DM Sans', sans-serif;
+            background-color: #FAF8F1;
+        }
+
+
+        /* NAVIGATION BAR */
+
+        nav {
+            background-color: #E9EDE3;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+
+        /* LOGO */
+
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-size: 40px;
+            font-weight: 600;
+            color: #304B35;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 100px;
+            width: auto;
+            display: block;
+        }
+
+
+        /* NAVIGATION LINKS */
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 35px;
+        }
+
+        .nav-links a {
+            color: #455B43;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #82977A;
+        }
+
+
+        /* CHAT NOW BUTTON */
+
+        .chat-button {
+            margin-top: 35px;
+        }
+
+        .chat-button a {
+            display: inline-block;
+            background-color: #304B35;
+            color: #FAF8F1;
+            text-decoration: none;
+            padding: 15px 32px;
+            border-radius: 30px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            transition: 0.3s ease;
+        }
+
+        .chat-button a:hover {
+            background-color: #82977A;
+            transform: translateY(-3px);
+        }
+
+
+        /* HOMEPAGE HERO SECTION */
+
+        .hero {
+            min-height: calc(100vh - 75px);
+            display: flex;
+            align-items: center;
+            padding: 60px 80px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #f7f3e9 0%,
+                    rgba(247, 243, 233, 0.95) 30%,
+                    rgba(247, 243, 233, 0.55) 60%,
+                    rgba(247, 243, 233, 0.05) 100%
+                ),
+                url("./organic.jpg");
+
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+
+        /* HOMEPAGE TEXT */
+
+        .hero-content {
+            width: 55%;
+            max-width: 650px;
+        }
+
+        .hero h1 {
+            color: #342E37;
+            font-family: 'Fraunces', serif;
+            font-size: 60px;
+            font-weight: 600;
+            margin: 0 0 18px;
+            line-height: 1.15;
+        }
+
+        .hero p {
+            font-family: 'Bodoni Moda', serif;
+            font-style: italic;
+            font-weight: 500;
+            font-size: 25px;
+            color: #304B35;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+
+        /* MOBILE RESPONSIVENESS */
+
+        @media (max-width: 768px) {
+
+            nav {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .logo img {
+                height: 75px;
+            }
+
+            .nav-links {
+                gap: 16px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-links a {
+                font-size: 13px;
+            }
+
+            .hero {
+                min-height: 85vh;
+                padding: 50px 25px;
+                background-position: 65% center;
+            }
+
+            .hero-content {
+                width: 100%;
+            }
+
+            .hero h1 {
+                font-size: 43px;
+            }
+
+            .hero p {
+                font-size: 21px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- NAVIGATION BAR -->
+
+    <nav>
+
+        <a href="index.html" class="logo">
+            <img src="limitless.png" alt="Limitless logo">
+        </a>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="recipes.html">Recipes</a>
+            <a href="assistant.html">AI Assistant</a>
+            <a href="learn.html">Learn</a>
+            <a href="community.html">Community</a>
+        </div>
+
+    </nav>
+
+    <!-- HOMEPAGE CONTENT -->
+
+    <main class="hero">
+
+        <div class="hero-content">
+
+            <h1>Cook freely, without limitations</h1>
+
+            <p>
+                Limitless is your AI assistant providing credible recipes
+                for food limitations, alongside a community cookbook
+                reviewed by our Limitless team.
+            </p>
+
+            <div class="chat-button">
+                <a href="assistant.html">Chat now →</a>
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>
