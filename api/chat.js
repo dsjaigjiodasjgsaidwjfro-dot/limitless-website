@@ -10,14 +10,16 @@ module.exports = async function handler(req, res) {
 
   try {
     // 1. Search ONLY credible websites via Tavily (with answer ready as backup!)
-    const tavilyResponse = await fetch("https://api.tavily.com/search", {
-      method: "POST",
+    const tavilyResponse = await fetch("https://api.tavily.com/search", 
+      {
+       method: "POST",
+       signal: AbortSignal.timeout(6000),
+       headers: { "Content-Type": "application/json" },
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         api_key: process.env.TAVILY_API_KEY,
-        query: `${userMessage} recipe`,
-        search_depth: "advanced",
-        include_answer: "advanced",
+       search_depth: "basic",
+     include_answer: "basic",
         max_results: 5,
         include_domains: [
           "mayoclinic.org",
