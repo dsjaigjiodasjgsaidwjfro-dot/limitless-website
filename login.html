@@ -67,40 +67,51 @@
     <p id="status"></p>
   </div>
 
-  <script type="module">
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import {
       getAuth,
       signInWithEmailAndPassword,
       createUserWithEmailAndPassword,
+      sendEmailVerification,
+      signOut,
       onAuthStateChanged
     } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
-    // PASTE YOUR FIREBASE CONFIG HERE (Firebase client keys are safe in HTML)
     const firebaseConfig = {
-  apiKey: "AIzaSyB_Tm1Mzsq2s74_6XR9ufqCLaZ85mvLZVE",
-  authDomain: "limitless-16ea6.firebaseapp.com",
-  projectId: "limitless-16ea6",
-  storageBucket: "limitless-16ea6.firebasestorage.app",
-  messagingSenderId: "492856532712",
-  appId: "1:492856532712:web:6aa2286c4fa6adf577335d",
-  measurementId: "G-TMDBLVNJNG"
-};
+      apiKey: "AIzaSyB_Tm1Mzsq2s74_6XR9ufqCLaZ85mvLZVE",
+      authDomain: "limitless-16ea6.firebaseapp.com",
+      projectId: "limitless-16ea6",
+      storageBucket: "limitless-16ea6.firebasestorage.app",
+      messagingSenderId: "492856532712",
+      appId: "1:492856532712:web:6aa2286c4fa6adf577335d",
+      measurementId: "G-TMDBLVNJNG"
+    };
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const status = document.getElementById("status");
 
-    // If already logged in, go straight to assistant.html
+    // Only redirect if logged in AND email is verified
     onAuthStateChanged(auth, (user) => {
-      if (user) window.location.href = "assistant.html";
+      if (user && user.emailVerified) {
+        window.location.href = "assistant.html";
+      }
     });
 
     document.getElementById("loginBtn").onclick = async () => {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
       try {
-        await signInWithEmailAndPassword(auth, email, password);
+        const cred = await signInWithEmailAndPassword(auth, email, password);
+        if (!cred.user.emailVerified) {
+          await sendEmailVerification(cred.user); // Optional: resend if not verified
+          await signOut(auth);
+          status.style.color = "#b00020";
+          status.textContent = "Please verify your email first. A new link was sent.";
+        }
       } catch (err) {
+        status.style.color = "#b00020";
         status.textContent = err.message;
       }
     };
@@ -109,11 +120,14 @@
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
       try {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        await sendEmailVerification(cred.user);
+        await signOut(auth); // Sign out until they verify
+        status.style.color = "#1f3a2c";
+        status.textContent = "Verification email sent! Check your inbox (and spam) before logging in.";
       } catch (err) {
+        status.style.color = "#b00020";
         status.textContent = err.message;
       }
     };
   </script>
-</body>
-</html>
